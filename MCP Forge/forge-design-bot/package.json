@@ -1,0 +1,20 @@
+{
+  "name": "forge-design-bot-mcp-server",
+  "version": "1.0.0",
+  "description": "Self-improving design bot MCP server for MCP Forge. Proposes, reviews, and iterates on UI/UX improvements with human approval gates.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "npx tsx src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3"
+  }
+}

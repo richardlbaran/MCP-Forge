@@ -1,0 +1,78 @@
+# MCP Forge v2.1 — Master Configuration
+# MANTIC schema is the foundation, not a feature
+
+forge:
+  name: "Rich's Forge"
+  version: "2.1.0"
+  created: "2026-01-31"
+
+# MANTIC Schema Configuration
+# The forge thinks in MANTIC. Projects are defined by deltas.
+schema:
+  protocol: mantic
+  version: "1.0"
+  
+  # Where project definitions live
+  projects_path: ~/Projects/contextcommand/projects
+  
+  # Every forge action is delta-aware
+  delta_types:
+    - decision
+    - requirement
+    - constraint
+    - risk
+    - question
+    - assumption
+    - artifact
+    - priority
+    - identity
+  
+  # Auto-inject schema into generated servers
+  auto_inject: true
+  
+  # Minimum confidence for delta consideration
+  min_confidence: 0.5
+
+paths:
+  workspace: ./workspace
+  servers: ./servers
+  templates: ./templates
+  logs: ./logs
+
+mcp_server:
+  enabled: true
+  name: "mcp-forge"
+  port: 3100
+  expose_tools:
+    - list_templates
+    - scaffold_server
+    - list_servers
+    - list_workspace
+    - test_tool
+    - promote_server
+    - save_as_template
+    - get_project_schema
+    - suggest_servers
+    - analyze_coverage
+
+defaults:
+  transport: stdio
+  language: typescript
+  author: "Rich"
+
+testing:
+  default_timeout: 10000
+  log_all_requests: true
+  save_history: true
+  history_limit: 1000
+  hot_reload: true
+
+ui:
+  theme: dark
+  default_page: projects
+  monaco_theme: vs-dark
+
+backup:
+  enabled: true
+  keep_versions: 10
+  auto_snapshot_on_promote: true

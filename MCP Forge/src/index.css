@@ -1,0 +1,251 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --forge-glow: rgba(249, 115, 22, 0.15);
+  }
+
+  body {
+    @apply bg-forge-bg text-forge-text antialiased;
+    font-feature-settings: 'liga' 1, 'calt' 1;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-forge-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-forge-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-forge-border-active;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-1 ring-forge-accent ring-offset-1 ring-offset-forge-bg;
+  }
+}
+
+@layer components {
+  /* Cards */
+  .forge-card {
+    @apply bg-forge-surface border border-forge-border rounded-lg;
+  }
+
+  .forge-card-hover {
+    @apply forge-card hover:border-forge-border-active hover:bg-forge-surface-hover transition-all duration-150;
+  }
+
+  .forge-card-selected {
+    @apply forge-card border-forge-accent bg-forge-accent-glow;
+  }
+
+  /* Inputs */
+  .forge-input {
+    @apply bg-forge-bg border border-forge-border rounded-md px-3 py-2 text-forge-text text-sm
+           focus:outline-none focus:border-forge-accent focus:ring-1 focus:ring-forge-accent/30
+           placeholder:text-forge-text-muted font-mono;
+  }
+
+  .forge-select {
+    @apply forge-input appearance-none cursor-pointer pr-8;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.25rem;
+  }
+
+  .forge-textarea {
+    @apply forge-input resize-none;
+  }
+
+  /* Buttons */
+  .forge-btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium text-sm 
+           transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .forge-btn-primary {
+    @apply forge-btn bg-forge-accent text-white hover:bg-forge-accent-hover active:bg-forge-accent-muted;
+  }
+
+  .forge-btn-secondary {
+    @apply forge-btn bg-forge-surface border border-forge-border text-forge-text 
+           hover:bg-forge-surface-hover hover:border-forge-border-active;
+  }
+
+  .forge-btn-ghost {
+    @apply forge-btn text-forge-text-secondary hover:text-forge-text hover:bg-forge-surface;
+  }
+
+  .forge-btn-danger {
+    @apply forge-btn bg-forge-error/10 text-forge-error border border-forge-error/20
+           hover:bg-forge-error/20 hover:border-forge-error/30;
+  }
+
+  .forge-btn-icon {
+    @apply p-2 rounded-md text-forge-text-secondary hover:text-forge-text hover:bg-forge-surface 
+           transition-colors;
+  }
+
+  /* Badges */
+  .forge-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .forge-badge-default {
+    @apply forge-badge bg-forge-surface text-forge-text-secondary;
+  }
+
+  .forge-badge-success {
+    @apply forge-badge bg-forge-success/10 text-forge-success;
+  }
+
+  .forge-badge-warning {
+    @apply forge-badge bg-forge-warning/10 text-forge-warning;
+  }
+
+  .forge-badge-error {
+    @apply forge-badge bg-forge-error/10 text-forge-error;
+  }
+
+  .forge-badge-info {
+    @apply forge-badge bg-forge-info/10 text-forge-info;
+  }
+
+  .forge-badge-accent {
+    @apply forge-badge bg-forge-accent/10 text-forge-accent;
+  }
+
+  .forge-badge-workspace {
+    @apply forge-badge bg-forge-workspace/10 text-forge-workspace;
+  }
+
+  .forge-badge-promoted {
+    @apply forge-badge bg-forge-promoted/10 text-forge-promoted;
+  }
+
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+  }
+
+  .status-dot-running {
+    @apply status-dot bg-forge-success animate-pulse;
+  }
+
+  .status-dot-stopped {
+    @apply status-dot bg-forge-text-muted;
+  }
+
+  .status-dot-error {
+    @apply status-dot bg-forge-error;
+  }
+
+  .status-dot-starting {
+    @apply status-dot bg-forge-warning animate-pulse;
+  }
+
+  /* Code blocks */
+  .code-block {
+    @apply bg-forge-bg border border-forge-border rounded-md p-4 font-mono text-sm overflow-x-auto;
+  }
+
+  /* Dividers */
+  .forge-divider {
+    @apply h-px bg-forge-border;
+  }
+
+  .forge-divider-vertical {
+    @apply w-px bg-forge-border;
+  }
+
+  /* Glow effects */
+  .forge-glow {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
+  }
+
+  .forge-glow-strong {
+    box-shadow: 0 0 30px rgba(249, 115, 22, 0.25);
+  }
+
+  /* Tabs */
+  .forge-tab {
+    @apply px-4 py-2 text-sm font-medium text-forge-text-secondary border-b-2 border-transparent
+           hover:text-forge-text transition-colors -mb-px;
+  }
+
+  .forge-tab-active {
+    @apply forge-tab text-forge-accent border-forge-accent;
+  }
+
+  /* Panel */
+  .forge-panel {
+    @apply bg-forge-surface border border-forge-border rounded-lg overflow-hidden;
+  }
+
+  .forge-panel-header {
+    @apply px-4 py-3 border-b border-forge-border flex items-center justify-between;
+  }
+
+  .forge-panel-body {
+    @apply p-4;
+  }
+
+  /* Log entries */
+  .log-entry {
+    @apply flex items-start gap-3 py-1 text-xs font-mono;
+  }
+
+  .log-entry-send {
+    @apply log-entry text-forge-info;
+  }
+
+  .log-entry-receive {
+    @apply log-entry text-forge-success;
+  }
+
+  .log-entry-error {
+    @apply log-entry text-forge-error;
+  }
+}
+
+/* Monaco editor overrides */
+.monaco-editor {
+  border-radius: 0.5rem;
+}
+
+.monaco-editor .margin {
+  background-color: #0d0e10 !important;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}

@@ -1,0 +1,170 @@
+{
+  "_meta": {
+    "version": "1.1.0",
+    "description": "Design memory for MCP Forge. Updated by the design bot after each approval/rejection cycle. This file IS the learned taste — treat it as sacred.",
+    "last_updated": "2026-02-08T21:00:00.000Z",
+    "total_sessions": 3,
+    "total_proposals": 3,
+    "acceptance_rate": 1
+  },
+  "design_principles": [
+    "Minimalist, almost empty — like walking into an empty gallery with one perfect piece",
+    "Deep purple-black palette (#0D0118 → #1A0A2E), NOT pure black, NOT AI rainbow gradients",
+    "Small understated text (14-16px), generous letter-spacing, clean sans-serif",
+    "Swiss bank energy, not Silicon Valley — premium, exclusive, trustworthy",
+    "No gamification — information not progress bars. Understated, not gamey",
+    "Assembly line visual organization — modular, clear flow, Build-a-Bear approach",
+    "Ghost-style buttons for primary actions, solid only for destructive",
+    "Vast whitespace signals confidence and quality",
+    "Orange accent used SPARINGLY — primary actions only, gray for secondary",
+    "Toast notifications for feedback, never silent actions",
+    "Every page has a consistent header: h1 title + text-sm subtitle describing the page purpose",
+    "Hide zero-value stats — show data-dependent sections only when data exists",
+    "Use forge-* design tokens in all components, never raw Tailwind colors"
+  ],
+  "component_patterns": {
+    "empty_states": "Icon (w-5 h-5 or w-14 h-14 in circle) + single descriptive sentence + one ghost action button. No sad illustrations. No tips boxes.",
+    "cards": "Subtle border, no drop shadow, generous padding (p-6 minimum). Hover reveals secondary actions.",
+    "buttons": {
+      "primary": "Ghost style, small, understated (forge-btn-ghost)",
+      "destructive": "Solid with confirmation gate",
+      "secondary": "Text-only or very subtle border (forge-btn-secondary)"
+    },
+    "loading": "Skeleton screens preferred over spinners. Spinners only for <2s operations.",
+    "modals": "Minimal. One purpose. Easy dismiss. No nested modals ever.",
+    "navigation": "Sidebar with consistent icon style (all outlined OR all filled, never mixed)",
+    "data_display": "Tables for structured data, cards for entities, never both on same view",
+    "forms": "Inline validation, auto-save where possible, explicit save button when not",
+    "page_headers": "h1 text-2xl font-semibold + p text-sm text-forge-text-secondary mt-1. Always include a subtitle.",
+    "quick_actions": "Grid of forge-card-hover items with icon in bg-forge-surface circle + label + sublabel. No orange backgrounds.",
+    "log_panels": "Terminal icon + descriptive text when empty. Auto-scroll to bottom when active.",
+    "search_inputs": "forge-input with Search icon (w-4) at left. text-sm. No custom styling.",
+    "stat_cards": "Only show when there is meaningful data. Hide entire section when all values are zero."
+  },
+  "color_palette": {
+    "background": {
+      "primary": "#0D0118",
+      "secondary": "#1A0A2E",
+      "surface": "rgba(255,255,255,0.03)"
+    },
+    "text": {
+      "primary": "#F5F5F5",
+      "secondary": "rgba(245,245,245,0.7)",
+      "muted": "rgba(245,245,245,0.4)"
+    },
+    "accent": {
+      "primary": "#F97316",
+      "primary_usage": "Primary actions ONLY — buttons, key indicators. Never decorative.",
+      "success": "#22C55E",
+      "warning": "#EAB308",
+      "error": "#EF4444"
+    }
+  },
+  "typography": {
+    "font_family": "Inter, system-ui, sans-serif",
+    "heading_sizes": {
+      "h1": "text-2xl (24px) — page titles only",
+      "h2": "text-lg (18px) — section headers",
+      "h3": "text-base (16px) — card headers"
+    },
+    "body": "text-sm (14px) — default for everything",
+    "small": "text-xs (12px) — metadata, timestamps, counts"
+  },
+  "rejected_patterns": [],
+  "approved_patterns": [
+    {
+      "date": "2026-02-08T19:27:34.044Z",
+      "file": "src/pages/Fleet.tsx",
+      "description": "Fleet Command empty state: icon + one sentence + ghost button. No decorative glow. Stats hidden when no workers. LogEmptyState with Terminal icon.",
+      "change_type": "empty_state"
+    },
+    {
+      "date": "2026-02-08T20:15:00.000Z",
+      "file": "src/pages/Dashboard.tsx",
+      "description": "Dashboard empty state: icon in circle + one sentence + ghost button. Activity feed empty state with Clock icon. Quick actions use bg-forge-surface, not bg-forge-accent/10.",
+      "change_type": "empty_state"
+    },
+    {
+      "date": "2026-02-08T21:00:00.000Z",
+      "file": "src/pages/Build.tsx",
+      "description": "Full design token migration for Build page. CategoryCard, SubcategoryCard, TemplateCard, TemplateDetail all converted from raw Tailwind colors to forge-* tokens. Build button uses forge-btn-ghost. forge-card class for detail sections.",
+      "change_type": "component"
+    },
+    {
+      "date": "2026-02-08T21:00:00.000Z",
+      "file": "src/pages/CreatorDashboard.tsx",
+      "description": "QuickAction and stat card icon backgrounds changed from bg-forge-accent/10, bg-green-500/10, bg-purple-500/10 to bg-forge-surface. Icon colors from brand-specific to text-forge-text-muted.",
+      "change_type": "color"
+    },
+    {
+      "date": "2026-02-08T21:00:00.000Z",
+      "file": "src/pages/Projects.tsx",
+      "description": "Projects page header subtitle made consistent (text-sm mt-1). Empty state follows icon-in-circle + sentence pattern with Target icon.",
+      "change_type": "empty_state"
+    }
+  ],
+  "session_log": [
+    {
+      "session_id": "session-1770451369113-oqjenl",
+      "date": "2026-02-07T08:02:49.113Z",
+      "objective": "Improve Fleet Command empty states and visual polish",
+      "files_scoped": ["src/pages/Fleet.tsx"],
+      "proposals_made": 1,
+      "proposals_accepted": 1,
+      "proposals_rejected": 0,
+      "proposals_revised": 0,
+      "iterations": 1,
+      "learnings": ["Remove decorative orange usage", "Hide zero-value stat rows", "Extract empty state sub-components"]
+    },
+    {
+      "session_id": "session-manual-improvements",
+      "date": "2026-02-08T20:15:00.000Z",
+      "objective": "Comprehensive product improvement — templates, pages, config, design consistency",
+      "files_scoped": [
+        "src/lib/generator/templates.ts",
+        "src/pages/Dashboard.tsx",
+        "src/pages/Build.tsx",
+        "src/pages/Templates.tsx",
+        "src/pages/Test.tsx",
+        "src/pages/Settings.tsx",
+        "src/lib/config.ts",
+        "forge-design-bot/design_memory.json"
+      ],
+      "proposals_made": 1,
+      "proposals_accepted": 1,
+      "proposals_rejected": 0,
+      "proposals_revised": 0,
+      "iterations": 1,
+      "learnings": [
+        "All pages need consistent header pattern: h1 + subtitle",
+        "Empty states across all pages should use the same pattern",
+        "Quick action cards should use bg-forge-surface not accent backgrounds",
+        "Search inputs should use forge-input class, not custom styling",
+        "Templates need rich descriptions, parameter examples, and enum constraints"
+      ]
+    },
+    {
+      "session_id": "session-final-polish",
+      "date": "2026-02-08T21:00:00.000Z",
+      "objective": "Final design token migration and remaining page consistency",
+      "files_scoped": [
+        "src/pages/Build.tsx",
+        "src/pages/CreatorDashboard.tsx",
+        "src/pages/Projects.tsx",
+        "src/pages/ServerDetail.tsx"
+      ],
+      "proposals_made": 1,
+      "proposals_accepted": 1,
+      "proposals_rejected": 0,
+      "proposals_revised": 0,
+      "iterations": 1,
+      "learnings": [
+        "Build page had 40+ raw Tailwind color classes — all migrated to forge-* tokens",
+        "CreatorDashboard stat icons should use neutral bg-forge-surface, not accent-tinted backgrounds",
+        "Every empty state in the app now follows the same icon + sentence + optional ghost button pattern",
+        "Category gradient colors in data definitions are acceptable — only component-level styling needs forge tokens",
+        "forge-card class replaces ad-hoc bg-gray-800/50 border border-gray-700 combinations"
+      ]
+    }
+  ]
+}
