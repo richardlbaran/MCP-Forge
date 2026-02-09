@@ -21,9 +21,7 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: '/', icon: Target,
-  Gauge,
-  Video, label: 'Projects' },
+  { path: '/', icon: Target, label: 'Projects' },
   { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/fleet', icon: Gauge, label: 'Fleet' },
   { path: '/creator', icon: Video, label: 'Creator' },

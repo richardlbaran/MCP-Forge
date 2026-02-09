@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useForgeStore } from '@/store';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -94,8 +95,8 @@ const CATEGORIES: Category[] = [
     name: 'Create Content',
     description: 'Video, images, audio, graphics',
     icon: Video,
-    color: 'text-purple-400',
-    gradient: 'from-purple-500/20 to-pink-500/20',
+    color: 'text-forge-promoted',
+    gradient: 'from-forge-promoted/20 to-forge-error/10',
     subcategories: [
       { id: 'video', name: 'Video', description: 'Process, clip, edit videos', icon: Video },
       { id: 'images', name: 'Images', description: 'Generate, edit, thumbnails', icon: Image },
@@ -108,8 +109,8 @@ const CATEGORIES: Category[] = [
     name: 'Analyze Data',
     description: 'Query, transform, visualize',
     icon: Database,
-    color: 'text-blue-400',
-    gradient: 'from-blue-500/20 to-cyan-500/20',
+    color: 'text-forge-info',
+    gradient: 'from-forge-info/20 to-forge-workspace/10',
     subcategories: [
       { id: 'database', name: 'Database', description: 'Query, insert, backup', icon: Database },
       { id: 'analytics', name: 'Analytics', description: 'Reports, insights', icon: BarChart3 },
@@ -121,8 +122,8 @@ const CATEGORIES: Category[] = [
     name: 'Connect APIs',
     description: 'Integrate external services',
     icon: Globe,
-    color: 'text-green-400',
-    gradient: 'from-green-500/20 to-emerald-500/20',
+    color: 'text-forge-success',
+    gradient: 'from-forge-success/20 to-forge-success/5',
     subcategories: [
       { id: 'rest', name: 'REST APIs', description: 'Any HTTP endpoint', icon: Globe },
       { id: 'webhooks', name: 'Webhooks', description: 'Receive & route events', icon: Zap },
@@ -134,8 +135,8 @@ const CATEGORIES: Category[] = [
     name: 'Build Code',
     description: 'Generate, test, document',
     icon: FileCode,
-    color: 'text-orange-400',
-    gradient: 'from-orange-500/20 to-amber-500/20',
+    color: 'text-forge-accent',
+    gradient: 'from-forge-accent/20 to-forge-warning/10',
     subcategories: [
       { id: 'generate', name: 'Generate', description: 'Components, routes, schemas', icon: Sparkles },
       { id: 'test', name: 'Test', description: 'Unit, integration, E2E', icon: TestTube },
@@ -148,8 +149,8 @@ const CATEGORIES: Category[] = [
     name: 'Monitor & Track',
     description: 'Analytics, health, performance',
     icon: Eye,
-    color: 'text-cyan-400',
-    gradient: 'from-cyan-500/20 to-blue-500/20',
+    color: 'text-forge-workspace',
+    gradient: 'from-forge-workspace/20 to-forge-info/10',
     subcategories: [
       { id: 'platform', name: 'Platform Stats', description: 'YouTube, TikTok, IG', icon: BarChart3 },
       { id: 'health', name: 'App Health', description: 'Errors, performance', icon: Shield },
@@ -161,8 +162,8 @@ const CATEGORIES: Category[] = [
     name: 'Automate Workflows',
     description: 'Schedule, trigger, chain',
     icon: Workflow,
-    color: 'text-pink-400',
-    gradient: 'from-pink-500/20 to-rose-500/20',
+    color: 'text-forge-error',
+    gradient: 'from-forge-error/20 to-forge-accent/10',
     subcategories: [
       { id: 'schedule', name: 'Schedule', description: 'Cron jobs, timers', icon: Clock },
       { id: 'workflows', name: 'Workflows', description: 'Multi-step automation', icon: Workflow },
@@ -174,8 +175,8 @@ const CATEGORIES: Category[] = [
     name: 'Engage Audience',
     description: 'Comments, community, trends',
     icon: MessageSquare,
-    color: 'text-yellow-400',
-    gradient: 'from-yellow-500/20 to-orange-500/20',
+    color: 'text-forge-warning',
+    gradient: 'from-forge-warning/20 to-forge-accent/10',
     subcategories: [
       { id: 'comments', name: 'Comments', description: 'Manage, reply, analyze', icon: MessageSquare },
       { id: 'trends', name: 'Trends', description: 'Detect early signals', icon: TrendingUp },
@@ -187,8 +188,8 @@ const CATEGORIES: Category[] = [
     name: 'Run Business',
     description: 'Revenue, invoices, planning',
     icon: DollarSign,
-    color: 'text-emerald-400',
-    gradient: 'from-emerald-500/20 to-green-500/20',
+    color: 'text-forge-success',
+    gradient: 'from-forge-success/20 to-forge-workspace/10',
     subcategories: [
       { id: 'revenue', name: 'Revenue', description: 'Track all income', icon: DollarSign },
       { id: 'docs', name: 'Documents', description: 'Invoices, contracts', icon: FileSpreadsheet },
@@ -210,7 +211,7 @@ const TEMPLATES: Template[] = [
     name: 'Video Processor',
     description: 'Transcode, compress, and export videos to multiple formats',
     icon: Video,
-    color: 'text-purple-400',
+    color: 'text-forge-promoted',
     category: 'content',
     subcategory: 'video',
     layer: 4,
@@ -265,7 +266,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Video Clipper',
     description: 'Extract clips, create shorts, auto-reframe for different platforms',
     icon: Video,
-    color: 'text-purple-400',
+    color: 'text-forge-promoted',
     category: 'content',
     subcategory: 'video',
     layer: 4,
@@ -323,7 +324,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Thumbnail Generator',
     description: 'Create eye-catching thumbnails with AI and smart templates',
     icon: Image,
-    color: 'text-pink-400',
+    color: 'text-forge-error',
     category: 'content',
     subcategory: 'images',
     layer: 4,
@@ -395,7 +396,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Transcriber',
     description: 'Transcribe audio/video to text with timestamps and chapters',
     icon: Music,
-    color: 'text-blue-400',
+    color: 'text-forge-info',
     category: 'content',
     subcategory: 'audio',
     layer: 4,
@@ -456,7 +457,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Caption Styler',
     description: 'Style and animate captions for TikTok, Reels, and Shorts',
     icon: FileText,
-    color: 'text-blue-400',
+    color: 'text-forge-info',
     category: 'content',
     subcategory: 'audio',
     layer: 4,
@@ -523,7 +524,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Audio Processor',
     description: 'Clean, enhance, and normalize audio tracks',
     icon: Music,
-    color: 'text-blue-400',
+    color: 'text-forge-info',
     category: 'content',
     subcategory: 'audio',
     layer: 4,
@@ -588,7 +589,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Graphic Designer',
     description: 'Create social media graphics, carousels, and stories',
     icon: PenTool,
-    color: 'text-pink-400',
+    color: 'text-forge-error',
     category: 'content',
     subcategory: 'graphics',
     layer: 4,
@@ -661,7 +662,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Code Generator',
     description: 'Generate React components, API routes, and database schemas',
     icon: FileCode,
-    color: 'text-orange-400',
+    color: 'text-forge-accent',
     category: 'code',
     subcategory: 'generate',
     layer: 3,
@@ -734,7 +735,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Test Runner',
     description: 'Generate and run tests, track coverage',
     icon: TestTube,
-    color: 'text-orange-400',
+    color: 'text-forge-accent',
     category: 'code',
     subcategory: 'test',
     layer: 3,
@@ -804,7 +805,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Doc Generator',
     description: 'Generate documentation, READMEs, and API docs',
     icon: FileText,
-    color: 'text-orange-400',
+    color: 'text-forge-accent',
     category: 'code',
     subcategory: 'docs',
     layer: 3,
@@ -875,7 +876,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Git Operations',
     description: 'Automate Git workflows: branching, commits, PRs',
     icon: GitBranch,
-    color: 'text-orange-400',
+    color: 'text-forge-accent',
     category: 'code',
     subcategory: 'git',
     layer: 3,
@@ -949,7 +950,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'YouTube Analytics',
     description: 'Deep analytics and insights for your YouTube channel',
     icon: BarChart3,
-    color: 'text-red-400',
+    color: 'text-forge-error',
     category: 'monitor',
     subcategory: 'platform',
     layer: 5,
@@ -1020,7 +1021,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Trend Detector',
     description: 'Detect trends early in your niche before they peak',
     icon: TrendingUp,
-    color: 'text-cyan-400',
+    color: 'text-forge-workspace',
     category: 'engage',
     subcategory: 'trends',
     layer: 5,
@@ -1090,7 +1091,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Content Scheduler',
     description: 'Schedule posts across all platforms at optimal times',
     icon: Calendar,
-    color: 'text-pink-400',
+    color: 'text-forge-error',
     category: 'automate',
     subcategory: 'schedule',
     layer: 5,
@@ -1156,7 +1157,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Comment Manager',
     description: 'Manage comments across platforms with sentiment analysis',
     icon: MessageSquare,
-    color: 'text-yellow-400',
+    color: 'text-forge-warning',
     category: 'engage',
     subcategory: 'comments',
     layer: 5,
@@ -1232,7 +1233,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Competitor Tracker',
     description: 'Monitor competitor channels and content strategy',
     icon: Search,
-    color: 'text-yellow-400',
+    color: 'text-forge-warning',
     category: 'engage',
     subcategory: 'competitors',
     layer: 5,
@@ -1309,7 +1310,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Revenue Tracker',
     description: 'Track all income sources: ads, sponsors, affiliates',
     icon: DollarSign,
-    color: 'text-green-400',
+    color: 'text-forge-success',
     category: 'business',
     subcategory: 'revenue',
     layer: 5,
@@ -1383,7 +1384,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Content Planner',
     description: 'Plan content calendar and track ideas',
     icon: Calendar,
-    color: 'text-emerald-400',
+    color: 'text-forge-success',
     category: 'business',
     subcategory: 'planning',
     layer: 5,
@@ -1462,7 +1463,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'Supabase Database',
     description: 'Full Supabase access with RLS-aware queries',
     icon: Database,
-    color: 'text-green-400',
+    color: 'text-forge-success',
     category: 'data',
     subcategory: 'database',
     layer: 3,
@@ -1538,7 +1539,7 @@ Error handling: If FFmpeg fails, check codec availability and suggest alternativ
     name: 'REST API Wrapper',
     description: 'Connect to any REST API with authentication',
     icon: Globe,
-    color: 'text-green-400',
+    color: 'text-forge-success',
     category: 'connect',
     subcategory: 'rest',
     layer: 3,
@@ -1812,6 +1813,8 @@ function TemplateDetail({
 export function Build() {
   const navigate = useNavigate();
   const { templateName } = useParams();
+  const addWorkspaceServer = useForgeStore((s) => s.addWorkspaceServer);
+  const config = useForgeStore((s) => s.config);
   
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
@@ -1872,9 +1875,41 @@ export function Build() {
           template={template}
           onBack={handleBack}
           onSelect={() => {
-            // Use the MCP forge tools to scaffold the server
             const serverName = template.id + '-' + Date.now().toString(36).slice(-4);
-            alert(`Scaffolding server "${serverName}" from ${template.name} template.\n\nUse the MCP Forge CLI or Claude to run:\n  scaffold_server("${template.id}", "${serverName}")`);
+            const now = new Date().toISOString();
+            addWorkspaceServer({
+              name: serverName,
+              location: 'workspace',
+              path: `${config.paths.workspace}/${serverName}`,
+              template: template.id,
+              status: 'stopped',
+              created_at: now,
+              updated_at: now,
+              meta: {
+                generated_at: now,
+                template: template.id,
+                template_version: '1.0.0',
+                forge_version: config.forge.version,
+                parent_server: null,
+                contextcommand_project: null,
+                modifications: [],
+              },
+              tools: template.tools.map((t) => ({
+                name: t.name,
+                description: t.description,
+                parameters: Object.fromEntries(
+                  Object.entries(t.parameters).map(([k, v]) => [k, {
+                    type: v.type as 'string' | 'number' | 'boolean' | 'object' | 'array',
+                    description: v.description,
+                    required: v.required ?? false,
+                  }])
+                ),
+              })),
+              variables: Object.fromEntries(
+                template.variables.map((v) => [v.name, v.default ?? ''])
+              ),
+            });
+            navigate(`/server/${serverName}`);
           }}
         />
       </div>

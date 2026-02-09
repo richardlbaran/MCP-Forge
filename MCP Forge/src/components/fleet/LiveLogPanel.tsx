@@ -462,7 +462,7 @@ export const LiveLogPanel = memo(function LiveLogPanel({
           >
             <button
               onClick={scrollToBottom}
-              className="flex items-center gap-1 px-2 py-1 rounded-full bg-forge-accent text-white text-xs shadow-forge hover:bg-forge-accent-hover transition-colors"
+              className="flex items-center gap-1 px-2 py-1 rounded-full bg-forge-accent text-forge-text text-xs shadow-forge hover:bg-forge-accent-hover transition-colors"
             >
               <ArrowDownToLine className="w-3 h-3" />
               <span>Latest</span>

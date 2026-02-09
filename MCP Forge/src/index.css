@@ -54,7 +54,11 @@
   .forge-input {
     @apply bg-forge-bg border border-forge-border rounded-md px-3 py-2 text-forge-text text-sm
            focus:outline-none focus:border-forge-accent focus:ring-1 focus:ring-forge-accent/30
-           placeholder:text-forge-text-muted font-mono;
+           placeholder:text-forge-text-muted;
+  }
+
+  .forge-input-mono {
+    @apply forge-input font-mono;
   }
 
   .forge-select {

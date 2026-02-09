@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -9,6 +9,7 @@ import {
   Check,
   ArrowUpRight,
   Clock,
+  AlertTriangle,
 } from 'lucide-react';
 import { useForgeStore, useAllServers } from '@/store';
 import { generateClaudeConfig } from '@/lib/generator';
@@ -24,6 +25,7 @@ export function ServerDetail() {
 
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [copied, setCopied] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const server = allServers.find((s) => s.name === serverName);
 
@@ -54,11 +56,20 @@ export function ServerDetail() {
   };
 
   const handleDelete = () => {
-    if (confirm(`Delete ${server.name}? This cannot be undone.`)) {
-      deleteServer(server.name, server.location);
-      navigate('/');
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
     }
+    deleteServer(server.name, server.location);
+    navigate('/');
   };
+
+  // Auto-reset confirmation after 4 seconds
+  useEffect(() => {
+    if (!confirmDelete) return;
+    const timer = setTimeout(() => setConfirmDelete(false), 4000);
+    return () => clearTimeout(timer);
+  }, [confirmDelete]);
 
   const claudeConfig = generateClaudeConfig(server);
 
@@ -204,9 +215,13 @@ export function ServerDetail() {
                   <FlaskConical className="w-4 h-4" />
                   Open Test Harness
                 </Link>
-                <button onClick={handleDelete} className="forge-btn-danger">
-                  <Trash2 className="w-4 h-4" />
-                  Delete Server
+                <button onClick={handleDelete} className={confirmDelete ? 'forge-btn-danger animate-pulse' : 'forge-btn-danger'}>
+                  {confirmDelete ? (
+                    <AlertTriangle className="w-4 h-4" />
+                  ) : (
+                    <Trash2 className="w-4 h-4" />
+                  )}
+                  {confirmDelete ? 'Click again to confirm' : 'Delete Server'}
                 </button>
               </div>
             </div>

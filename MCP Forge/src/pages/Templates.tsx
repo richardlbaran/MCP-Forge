@@ -1,7 +1,26 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Plus, ArrowRight, Tag } from 'lucide-react';
+import {
+  Search,
+  Plus,
+  ArrowRight,
+  Tag,
+  FileText,
+  Database,
+  Globe,
+  GitBranch,
+  MessageSquare,
+  FileSpreadsheet,
+  Bug,
+  Target,
+  FolderOpen,
+  Chrome,
+  Brain,
+  Clock,
+  Mail,
+  Layers,
+} from 'lucide-react';
 import { useAllTemplates } from '@/store';
 import { getAllTags } from '@/lib/generator/templates';
 
@@ -28,8 +47,8 @@ export function Templates() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-forge-text">Templates</h1>
-          <p className="text-forge-text-secondary">
-            Pre-configured MCP server templates
+          <p className="text-sm text-forge-text-secondary mt-1">
+            Pre-configured MCP server templates ready to scaffold
           </p>
         </div>
         <button className="forge-btn-secondary">
@@ -87,8 +106,8 @@ export function Templates() {
               className="forge-card-hover block p-4 group"
             >
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-forge-accent/10 flex items-center justify-center text-lg shrink-0">
-                  {getTemplateIcon(template.name)}
+                <div className="w-10 h-10 rounded-lg bg-forge-surface flex items-center justify-center shrink-0">
+                  <TemplateIcon name={template.name} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
@@ -148,31 +167,37 @@ export function Templates() {
       </div>
 
       {filteredTemplates.length === 0 && (
-        <div className="forge-card p-8 text-center">
-          <p className="text-forge-text-muted">No templates match your search</p>
+        <div className="flex flex-col items-center justify-center py-16">
+          <div className="w-14 h-14 rounded-full bg-forge-surface border border-forge-border flex items-center justify-center mb-5">
+            <Search className="w-6 h-6 text-forge-text-muted" />
+          </div>
+          <p className="text-sm text-forge-text-muted">
+            No templates match your search.
+          </p>
         </div>
       )}
     </div>
   );
 }
 
-function getTemplateIcon(name: string): string {
-  const icons: Record<string, string> = {
-    _blank: '📝',
-    supabase: '⚡',
-    'api-wrapper': '🔌',
-    github: '🐙',
-    slack: '💬',
-    notion: '📓',
-    'web-scraper': '🕸',
-    email: '📧',
-    'gtm-hub': '🎯',
-    'health-monitor': '🏥',
-    'mantic-extractor': '🔬',
-    'file-system': '📁',
-    'chrome-bridge': '🌐',
-    'vector-db': '🧠',
-    scheduler: '⏰',
+function TemplateIcon({ name }: { name: string }) {
+  const icons: Record<string, React.ElementType> = {
+    _blank: FileText,
+    supabase: Database,
+    'api-wrapper': Globe,
+    github: GitBranch,
+    slack: MessageSquare,
+    notion: FileSpreadsheet,
+    'web-scraper': Globe,
+    email: Mail,
+    'gtm-hub': Target,
+    'health-monitor': Bug,
+    'mantic-extractor': Layers,
+    'file-system': FolderOpen,
+    'chrome-bridge': Chrome,
+    'vector-db': Brain,
+    scheduler: Clock,
   };
-  return icons[name] || '📦';
+  const Icon = icons[name] || Layers;
+  return <Icon className="w-5 h-5 text-forge-text-muted" />;
 }

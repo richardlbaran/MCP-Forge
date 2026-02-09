@@ -764,9 +764,9 @@ function ProgressBar({ currentPhase, phases }: { currentPhase: string; phases: t
           <div key={phase.id} className="flex items-center">
             <div className={`
               flex items-center gap-2 px-3 py-2 rounded-lg transition-colors
-              ${isComplete ? 'bg-green-500/20 text-green-400' : ''}
-              ${isCurrent ? 'bg-orange-500/20 text-orange-400' : ''}
-              ${!isComplete && !isCurrent ? 'bg-gray-800 text-gray-500' : ''}
+              ${isComplete ? 'bg-forge-success/20 text-forge-success' : ''}
+              ${isCurrent ? 'bg-forge-accent/20 text-forge-accent' : ''}
+              ${!isComplete && !isCurrent ? 'bg-forge-surface text-forge-text-muted' : ''}
             `}>
               {isComplete ? (
                 <Check className="w-4 h-4" />
@@ -776,7 +776,7 @@ function ProgressBar({ currentPhase, phases }: { currentPhase: string; phases: t
               <span className="text-sm font-medium">{phase.name}</span>
             </div>
             {index < phases.length - 1 && (
-              <div className={`w-8 h-0.5 mx-2 ${index < currentIndex ? 'bg-green-500' : 'bg-gray-700'}`} />
+              <div className={`w-8 h-0.5 mx-2 ${index < currentIndex ? 'bg-forge-success' : 'bg-forge-surface'}`} />
             )}
           </div>
         );
@@ -804,37 +804,37 @@ function OptionCard({
       className={`
         relative p-4 rounded-xl text-left transition-all
         ${selected 
-          ? 'bg-orange-500/20 border-2 border-orange-500' 
-          : 'bg-gray-800/50 border-2 border-gray-700 hover:border-gray-600'
+          ? 'bg-forge-accent/20 border-2 border-forge-accent' 
+          : 'bg-forge-surface/50 border-2 border-forge-border hover:border-forge-accent/50'
         }
       `}
     >
       {option.recommended && !selected && (
-        <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-green-500 text-white text-2xs rounded-full">
+        <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-forge-success text-forge-text text-2xs rounded-full">
           Recommended
         </span>
       )}
       
       <div className="flex items-start gap-3">
         {Icon && (
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selected ? 'bg-orange-500/30' : 'bg-gray-700'}`}>
-            <Icon className={`w-5 h-5 ${selected ? 'text-orange-400' : 'text-gray-400'}`} />
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${selected ? 'bg-forge-accent/30' : 'bg-forge-surface'}`}>
+            <Icon className={`w-5 h-5 ${selected ? 'text-forge-accent' : 'text-forge-text-muted'}`} />
           </div>
         )}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className={`font-medium ${selected ? 'text-orange-400' : 'text-white'}`}>
+            <h4 className={`font-medium ${selected ? 'text-forge-accent' : 'text-forge-text'}`}>
               {option.label}
             </h4>
-            {selected && <Check className="w-4 h-4 text-orange-400" />}
+            {selected && <Check className="w-4 h-4 text-forge-accent" />}
           </div>
-          <p className="text-sm text-gray-400 mt-1">{option.description}</p>
+          <p className="text-sm text-forge-text-muted mt-1">{option.description}</p>
           
           {option.tradeoffs && (
             <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
               <div>
                 {option.tradeoffs.pros.slice(0, 2).map((pro, i) => (
-                  <div key={i} className="flex items-center gap-1 text-green-400">
+                  <div key={i} className="flex items-center gap-1 text-forge-success">
                     <Check className="w-3 h-3" />
                     {pro}
                   </div>
@@ -842,7 +842,7 @@ function OptionCard({
               </div>
               <div>
                 {option.tradeoffs.cons.slice(0, 2).map((con, i) => (
-                  <div key={i} className="flex items-center gap-1 text-red-400">
+                  <div key={i} className="flex items-center gap-1 text-forge-error">
                     <AlertTriangle className="w-3 h-3" />
                     {con}
                   </div>
@@ -868,55 +868,55 @@ function ResultsView({
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="w-8 h-8 text-green-400" />
+        <div className="w-16 h-16 rounded-full bg-forge-success/20 flex items-center justify-center mx-auto mb-4">
+          <CheckCircle className="w-8 h-8 text-forge-success" />
         </div>
-        <h2 className="text-2xl font-bold text-white">Your Blueprint is Ready</h2>
-        <p className="text-gray-400 mt-2">Based on your answers, here's your recommended stack</p>
+        <h2 className="text-2xl font-bold text-forge-text">Your Blueprint is Ready</h2>
+        <p className="text-forge-text-muted mt-2">Based on your answers, here's your recommended stack</p>
       </div>
 
       {/* Stack Overview */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+        <div className="p-4 rounded-xl bg-forge-surface border border-forge-border">
+          <div className="flex items-center gap-2 text-forge-text-muted text-sm mb-2">
             <Server className="w-4 h-4" />
             Architecture
           </div>
-          <p className="text-white font-medium capitalize">{result.architecture}</p>
+          <p className="text-forge-text font-medium capitalize">{result.architecture}</p>
         </div>
-        <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+        <div className="p-4 rounded-xl bg-forge-surface border border-forge-border">
+          <div className="flex items-center gap-2 text-forge-text-muted text-sm mb-2">
             <Database className="w-4 h-4" />
             Database
           </div>
-          <p className="text-white font-medium">{result.database}</p>
+          <p className="text-forge-text font-medium">{result.database}</p>
         </div>
-        <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+        <div className="p-4 rounded-xl bg-forge-surface border border-forge-border">
+          <div className="flex items-center gap-2 text-forge-text-muted text-sm mb-2">
             <Shield className="w-4 h-4" />
             Authentication
           </div>
-          <p className="text-white font-medium">{result.auth}</p>
+          <p className="text-forge-text font-medium">{result.auth}</p>
         </div>
-        <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+        <div className="p-4 rounded-xl bg-forge-surface border border-forge-border">
+          <div className="flex items-center gap-2 text-forge-text-muted text-sm mb-2">
             <Globe className="w-4 h-4" />
             Deployment
           </div>
-          <p className="text-white font-medium">{result.deployment}</p>
+          <p className="text-forge-text font-medium">{result.deployment}</p>
         </div>
       </div>
 
       {/* Warnings */}
       {result.warnings.length > 0 && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-          <h3 className="text-red-400 font-medium mb-2 flex items-center gap-2">
+        <div className="p-4 rounded-xl bg-forge-error/10 border border-forge-error/30">
+          <h3 className="text-forge-error font-medium mb-2 flex items-center gap-2">
             <AlertTriangle className="w-4 h-4" />
             Warnings
           </h3>
           <ul className="space-y-1">
             {result.warnings.map((warning, i) => (
-              <li key={i} className="text-sm text-red-300">• {warning}</li>
+              <li key={i} className="text-sm text-forge-error">• {warning}</li>
             ))}
           </ul>
         </div>
@@ -924,15 +924,15 @@ function ResultsView({
 
       {/* Recommendations */}
       {result.recommendations.length > 0 && (
-        <div className="p-4 rounded-xl bg-gray-800/50 border border-gray-700">
-          <h3 className="text-white font-medium mb-3 flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-orange-400" />
+        <div className="p-4 rounded-xl bg-forge-surface border border-forge-border">
+          <h3 className="text-forge-text font-medium mb-3 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-forge-accent" />
             Recommendations
           </h3>
           <ul className="space-y-2">
             {result.recommendations.map((rec, i) => (
-              <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                <Check className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
+              <li key={i} className="text-sm text-forge-text-secondary flex items-start gap-2">
+                <Check className="w-4 h-4 text-forge-success mt-0.5 shrink-0" />
                 {rec}
               </li>
             ))}
@@ -941,14 +941,14 @@ function ResultsView({
       )}
 
       {/* Suggested Templates */}
-      <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/30">
-        <h3 className="text-orange-400 font-medium mb-3 flex items-center gap-2">
+      <div className="p-4 rounded-xl bg-forge-accent/10 border border-forge-accent/30">
+        <h3 className="text-forge-accent font-medium mb-3 flex items-center gap-2">
           <Zap className="w-4 h-4" />
           Suggested MCP Servers to Build
         </h3>
         <div className="flex flex-wrap gap-2">
           {result.suggestedTemplates.map((templateId) => (
-            <span key={templateId} className="px-3 py-1.5 bg-orange-500/20 text-orange-300 rounded-lg text-sm">
+            <span key={templateId} className="px-3 py-1.5 bg-forge-accent/20 text-forge-accent rounded-lg text-sm">
               {templateId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
             </span>
           ))}
@@ -959,13 +959,13 @@ function ResultsView({
       <div className="flex items-center gap-4 pt-4">
         <button
           onClick={onStartOver}
-          className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+          className="px-4 py-2 text-forge-text-muted hover:text-forge-text transition-colors"
         >
           Start Over
         </button>
         <button
           onClick={onContinue}
-          className="flex-1 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"
+          className="flex-1 px-6 py-3 bg-forge-accent hover:bg-forge-accent/80 text-forge-text rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"
         >
           Build These Servers
           <ArrowRight className="w-4 h-4" />
@@ -1051,12 +1051,12 @@ export function BlueprintWizard({ onComplete, onCancel }: BlueprintWizardProps) 
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={onCancel}
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-forge-text-muted hover:text-forge-text transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Exit Wizard
         </button>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-forge-text-muted">
           {currentQuestionIndex + 1} of {activeQuestions.length}
         </span>
       </div>
@@ -1065,9 +1065,9 @@ export function BlueprintWizard({ onComplete, onCancel }: BlueprintWizardProps) 
       <ProgressBar currentPhase={currentPhase} phases={PHASES} />
 
       {/* Progress bar */}
-      <div className="h-1 bg-gray-800 rounded-full mb-8 overflow-hidden">
+      <div className="h-1 bg-forge-surface rounded-full mb-8 overflow-hidden">
         <motion.div
-          className="h-full bg-orange-500"
+          className="h-full bg-forge-accent"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.3 }}
@@ -1083,9 +1083,9 @@ export function BlueprintWizard({ onComplete, onCancel }: BlueprintWizardProps) 
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-white mb-2">{currentQuestion.question}</h2>
+          <h2 className="text-2xl font-bold text-forge-text mb-2">{currentQuestion.question}</h2>
           {currentQuestion.description && (
-            <p className="text-gray-400 mb-6">{currentQuestion.description}</p>
+            <p className="text-forge-text-muted mb-6">{currentQuestion.description}</p>
           )}
 
           <div className="space-y-3">
@@ -1106,14 +1106,14 @@ export function BlueprintWizard({ onComplete, onCancel }: BlueprintWizardProps) 
         <button
           onClick={handleBack}
           disabled={currentQuestionIndex === 0}
-          className="px-4 py-2 text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 text-forge-text-muted hover:text-forge-text disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Back
         </button>
         <button
           onClick={handleNext}
           disabled={!currentAnswer}
-          className="px-6 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-xl font-medium flex items-center gap-2 transition-colors"
+          className="px-6 py-3 bg-forge-accent hover:bg-forge-accent/80 disabled:bg-forge-surface disabled:cursor-not-allowed text-forge-text rounded-xl font-medium flex items-center gap-2 transition-colors"
         >
           {currentQuestionIndex === activeQuestions.length - 1 ? 'See Results' : 'Continue'}
           <ArrowRight className="w-4 h-4" />

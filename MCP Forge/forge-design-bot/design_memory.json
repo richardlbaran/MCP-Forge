@@ -2,14 +2,14 @@
   "_meta": {
     "version": "1.1.0",
     "description": "Design memory for MCP Forge. Updated by the design bot after each approval/rejection cycle. This file IS the learned taste — treat it as sacred.",
-    "last_updated": "2026-02-08T21:00:00.000Z",
-    "total_sessions": 3,
-    "total_proposals": 3,
+    "last_updated": "2026-02-08T22:00:00.000Z",
+    "total_sessions": 4,
+    "total_proposals": 4,
     "acceptance_rate": 1
   },
   "design_principles": [
     "Minimalist, almost empty — like walking into an empty gallery with one perfect piece",
-    "Deep purple-black palette (#0D0118 → #1A0A2E), NOT pure black, NOT AI rainbow gradients",
+    "Industrial dark palette (#08090a → #131416), NOT pure black, NOT AI rainbow gradients",
     "Small understated text (14-16px), generous letter-spacing, clean sans-serif",
     "Swiss bank energy, not Silicon Valley — premium, exclusive, trustworthy",
     "No gamification — information not progress bars. Understated, not gamey",
@@ -43,21 +43,32 @@
   },
   "color_palette": {
     "background": {
-      "primary": "#0D0118",
-      "secondary": "#1A0A2E",
-      "surface": "rgba(255,255,255,0.03)"
+      "primary": "#08090a",
+      "elevated": "#0d0e10",
+      "surface": "#131416",
+      "surface_hover": "#1a1c1f"
+    },
+    "border": {
+      "default": "#232528",
+      "active": "#3a3d42"
     },
     "text": {
-      "primary": "#F5F5F5",
-      "secondary": "rgba(245,245,245,0.7)",
-      "muted": "rgba(245,245,245,0.4)"
+      "primary": "#e8e9eb",
+      "secondary": "#9ca3af",
+      "muted": "#6b7280"
     },
     "accent": {
-      "primary": "#F97316",
+      "primary": "#f97316",
+      "hover": "#ea580c",
       "primary_usage": "Primary actions ONLY — buttons, key indicators. Never decorative.",
-      "success": "#22C55E",
-      "warning": "#EAB308",
-      "error": "#EF4444"
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "error": "#ef4444",
+      "info": "#3b82f6"
+    },
+    "special": {
+      "promoted": "#8b5cf6",
+      "workspace": "#06b6d4"
     }
   },
   "typography": {
@@ -101,6 +112,30 @@
       "file": "src/pages/Projects.tsx",
       "description": "Projects page header subtitle made consistent (text-sm mt-1). Empty state follows icon-in-circle + sentence pattern with Target icon.",
       "change_type": "empty_state"
+    },
+    {
+      "date": "2026-02-08T22:00:00.000Z",
+      "file": "src/pages/Templates.tsx",
+      "description": "Replaced emoji getTemplateIcon with Lucide TemplateIcon component. Icon container bg-forge-surface. Subtitle text-sm mt-1. Empty state uses icon-in-circle with Search icon.",
+      "change_type": "component"
+    },
+    {
+      "date": "2026-02-08T22:00:00.000Z",
+      "file": "src/pages/Settings.tsx",
+      "description": "Extracted accessible Toggle component with role=switch, aria-checked, keyboard support. All 3 toggle switches now use the component.",
+      "change_type": "accessibility"
+    },
+    {
+      "date": "2026-02-08T22:00:00.000Z",
+      "file": "src/pages/ServerDetail.tsx",
+      "description": "Replaced raw confirm() with inline two-click confirmation pattern. Delete button shows AlertTriangle + 'Click again to confirm' with 4s auto-reset.",
+      "change_type": "interaction"
+    },
+    {
+      "date": "2026-02-08T22:00:00.000Z",
+      "file": "src/components/BlueprintWizard.tsx",
+      "description": "Complete forge token migration: 30+ raw color classes (orange-500, green-400, red-400, gray-700/800, text-white) all replaced with forge-* design tokens.",
+      "change_type": "color"
     }
   ],
   "session_log": [
@@ -164,6 +199,31 @@
         "Every empty state in the app now follows the same icon + sentence + optional ghost button pattern",
         "Category gradient colors in data definitions are acceptable — only component-level styling needs forge tokens",
         "forge-card class replaces ad-hoc bg-gray-800/50 border border-gray-700 combinations"
+      ]
+    },
+    {
+      "session_id": "session-cycle-2-deep-clean",
+      "date": "2026-02-08T22:00:00.000Z",
+      "objective": "Eliminate every raw Tailwind color, fix accessibility, replace confirm() dialogs",
+      "files_scoped": [
+        "src/pages/Templates.tsx",
+        "src/pages/Settings.tsx",
+        "src/pages/ServerDetail.tsx",
+        "src/components/BlueprintWizard.tsx",
+        "src/components/fleet/WorkerCard.tsx",
+        "src/pages/CreatorDashboard.tsx"
+      ],
+      "proposals_made": 1,
+      "proposals_accepted": 1,
+      "proposals_rejected": 0,
+      "proposals_revised": 0,
+      "iterations": 1,
+      "learnings": [
+        "Zero raw Tailwind colors now exist across entire src/ directory — complete design token coverage",
+        "Toggle switches need role=switch and aria-checked for screen readers",
+        "confirm() dialogs should be replaced with inline two-click confirmation patterns",
+        "BlueprintWizard was the largest violator with 30+ raw color classes — systematic replace_all is the efficient approach",
+        "Emoji icons in templates should be replaced with Lucide components for design consistency"
       ]
     }
   ]

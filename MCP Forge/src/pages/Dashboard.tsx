@@ -10,6 +10,9 @@ import {
   FolderOpen,
   Layers,
   Zap,
+  Database,
+  GitBranch,
+  MessageSquare,
 } from 'lucide-react';
 import { useForgeStore, useAllServers, useAllTemplates } from '@/store';
 import type { MCPServer, ActivityEntry } from '@/types';
@@ -210,7 +213,7 @@ export function Dashboard() {
               className="forge-card-hover p-4 text-center group"
             >
               <div className="w-10 h-10 rounded-lg bg-forge-surface flex items-center justify-center mx-auto mb-2 group-hover:bg-forge-surface-hover transition-colors">
-                <span className="text-lg">⚡</span>
+                <Database className="w-5 h-5 text-forge-text-muted" />
               </div>
               <p className="text-sm font-medium text-forge-text">Supabase</p>
               <p className="text-2xs text-forge-text-muted">Database</p>
@@ -220,7 +223,7 @@ export function Dashboard() {
               className="forge-card-hover p-4 text-center group"
             >
               <div className="w-10 h-10 rounded-lg bg-forge-surface flex items-center justify-center mx-auto mb-2 group-hover:bg-forge-surface-hover transition-colors">
-                <span className="text-lg">🐙</span>
+                <GitBranch className="w-5 h-5 text-forge-text-muted" />
               </div>
               <p className="text-sm font-medium text-forge-text">GitHub</p>
               <p className="text-2xs text-forge-text-muted">Issues & PRs</p>
@@ -230,7 +233,7 @@ export function Dashboard() {
               className="forge-card-hover p-4 text-center group"
             >
               <div className="w-10 h-10 rounded-lg bg-forge-surface flex items-center justify-center mx-auto mb-2 group-hover:bg-forge-surface-hover transition-colors">
-                <span className="text-lg">💬</span>
+                <MessageSquare className="w-5 h-5 text-forge-text-muted" />
               </div>
               <p className="text-sm font-medium text-forge-text">Slack</p>
               <p className="text-2xs text-forge-text-muted">Messaging</p>

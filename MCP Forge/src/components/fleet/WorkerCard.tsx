@@ -75,8 +75,8 @@ const STATUS_CONFIG: Record<WorkerStatus, StatusConfig> = {
   },
   spawning: {
     label: 'Starting',
-    color: 'text-yellow-500',
-    bgColor: 'bg-yellow-500/10',
+    color: 'text-forge-warning',
+    bgColor: 'bg-forge-warning/10',
     icon: Loader2,
     animate: true,
   },

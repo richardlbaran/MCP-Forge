@@ -23,10 +23,10 @@ import {
 // Platform icon component
 function PlatformIcon({ platform }: { platform: string }) {
   const icons: Record<string, { icon: typeof Youtube; color: string }> = {
-    youtube: { icon: Youtube, color: 'text-red-500' },
-    tiktok: { icon: Video, color: 'text-white' },
-    instagram: { icon: Instagram, color: 'text-pink-500' },
-    shorts: { icon: Play, color: 'text-red-400' },
+    youtube: { icon: Youtube, color: 'text-forge-error' },
+    tiktok: { icon: Video, color: 'text-forge-text' },
+    instagram: { icon: Instagram, color: 'text-forge-error' },
+    shorts: { icon: Play, color: 'text-forge-error' },
   };
   
   const config = icons[platform] || { icon: Video, color: 'text-forge-text-muted' };
@@ -71,7 +71,7 @@ function PipelineStage({
   return (
     <div className="flex flex-col items-center">
       <div className={`w-14 h-14 rounded-xl ${color} flex items-center justify-center mb-2`}>
-        <span className="text-xl font-bold text-white">{count}</span>
+        <span className="text-xl font-bold text-forge-text">{count}</span>
       </div>
       <span className="text-xs text-forge-text-muted">{label}</span>
     </div>
@@ -92,10 +92,10 @@ function PlatformBar({
 }) {
   const percentage = (views / maxViews) * 100;
   const colors: Record<string, string> = {
-    youtube: 'bg-red-500',
-    tiktok: 'bg-white',
-    instagram: 'bg-gradient-to-r from-purple-500 to-pink-500',
-    shorts: 'bg-red-400',
+    youtube: 'bg-forge-error',
+    tiktok: 'bg-forge-text',
+    instagram: 'bg-forge-promoted',
+    shorts: 'bg-forge-error',
   };
   
   return (
@@ -317,13 +317,13 @@ export function CreatorDashboard() {
         <h3 className="font-medium text-forge-text mb-6">Content Pipeline</h3>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <PipelineStage label="Filming" count={pipeline.filming} color="bg-yellow-500" />
+            <PipelineStage label="Filming" count={pipeline.filming} color="bg-forge-warning" />
             <ArrowRight className="w-4 h-4 text-forge-text-muted" />
-            <PipelineStage label="Processing" count={pipeline.processing} color="bg-blue-500" />
+            <PipelineStage label="Processing" count={pipeline.processing} color="bg-forge-info" />
             <ArrowRight className="w-4 h-4 text-forge-text-muted" />
-            <PipelineStage label="Scheduled" count={pipeline.scheduled} color="bg-purple-500" />
+            <PipelineStage label="Scheduled" count={pipeline.scheduled} color="bg-forge-promoted" />
             <ArrowRight className="w-4 h-4 text-forge-text-muted" />
-            <PipelineStage label="Posted" count={pipeline.posted} color="bg-green-500" />
+            <PipelineStage label="Posted" count={pipeline.posted} color="bg-forge-success" />
             <ArrowRight className="w-4 h-4 text-forge-text-muted" />
             <PipelineStage label="Total" count={pipeline.total} color="bg-forge-accent" />
           </div>

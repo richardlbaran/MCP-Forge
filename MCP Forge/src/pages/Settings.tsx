@@ -3,6 +3,27 @@ import { Copy, Check } from 'lucide-react';
 import { useForgeStore } from '@/store';
 import { exportConfigAsYaml } from '@/lib/config';
 
+function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
+  return (
+    <button
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      onClick={onChange}
+      onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); onChange(); } }}
+      className={`w-10 h-5 rounded-full transition-colors ${
+        checked ? 'bg-forge-accent' : 'bg-forge-surface'
+      }`}
+    >
+      <div
+        className={`w-4 h-4 bg-white rounded-full transition-transform ${
+          checked ? 'translate-x-5' : 'translate-x-0.5'
+        }`}
+      />
+    </button>
+  );
+}
+
 export function Settings() {
   const config = useForgeStore((s) => s.config);
   const setConfig = useForgeStore((s) => s.setConfig);
@@ -129,8 +150,9 @@ export function Settings() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm text-forge-text">Enable Bridge</label>
-            <button
-              onClick={() =>
+            <Toggle
+              checked={config.context_bridge.enabled}
+              onChange={() =>
                 setConfig({
                   context_bridge: {
                     ...config.context_bridge,
@@ -138,18 +160,8 @@ export function Settings() {
                   },
                 })
               }
-              className={`w-10 h-5 rounded-full transition-colors ${
-                config.context_bridge.enabled
-                  ? 'bg-forge-accent'
-                  : 'bg-forge-surface'
-              }`}
-            >
-              <div
-                className={`w-4 h-4 bg-white rounded-full transition-transform ${
-                  config.context_bridge.enabled ? 'translate-x-5' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
+              label="Enable Bridge"
+            />
           </div>
           <div>
             <label className="block text-sm text-forge-text-muted mb-1">
@@ -172,8 +184,9 @@ export function Settings() {
           </div>
           <div className="flex items-center justify-between">
             <label className="text-sm text-forge-text">Auto-inject Context</label>
-            <button
-              onClick={() =>
+            <Toggle
+              checked={config.context_bridge.auto_inject}
+              onChange={() =>
                 setConfig({
                   context_bridge: {
                     ...config.context_bridge,
@@ -181,18 +194,8 @@ export function Settings() {
                   },
                 })
               }
-              className={`w-10 h-5 rounded-full transition-colors ${
-                config.context_bridge.auto_inject
-                  ? 'bg-forge-accent'
-                  : 'bg-forge-surface'
-              }`}
-            >
-              <div
-                className={`w-4 h-4 bg-white rounded-full transition-transform ${
-                  config.context_bridge.auto_inject ? 'translate-x-5' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
+              label="Auto-inject Context"
+            />
           </div>
         </div>
       </div>
@@ -203,8 +206,9 @@ export function Settings() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm text-forge-text">Enable Server</label>
-            <button
-              onClick={() =>
+            <Toggle
+              checked={config.mcp_server.enabled}
+              onChange={() =>
                 setConfig({
                   mcp_server: {
                     ...config.mcp_server,
@@ -212,16 +216,8 @@ export function Settings() {
                   },
                 })
               }
-              className={`w-10 h-5 rounded-full transition-colors ${
-                config.mcp_server.enabled ? 'bg-forge-accent' : 'bg-forge-surface'
-              }`}
-            >
-              <div
-                className={`w-4 h-4 bg-white rounded-full transition-transform ${
-                  config.mcp_server.enabled ? 'translate-x-5' : 'translate-x-0.5'
-                }`}
-              />
-            </button>
+              label="Enable MCP Server"
+            />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
