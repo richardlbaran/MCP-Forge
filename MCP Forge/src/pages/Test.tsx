@@ -270,10 +270,13 @@ export function Test() {
                                   : ''
                               }
                               onChange={(e) => {
+                                const val = e.target.value;
+                                if (!val.trim()) return;
                                 try {
-                                  setParam(key, JSON.parse(e.target.value));
+                                  setParam(key, JSON.parse(val));
+                                  e.target.setCustomValidity('');
                                 } catch {
-                                  // Invalid JSON, ignore
+                                  e.target.setCustomValidity('Invalid JSON');
                                 }
                               }}
                               className="forge-textarea w-full h-24 text-xs font-mono"

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForgeStore } from '@/store';
+import { BlueprintWizard } from '@/components/BlueprintWizard';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -1685,8 +1686,8 @@ function TemplateCard({
           </div>
           <p className="text-sm text-forge-text-secondary mb-2">{template.description}</p>
           <div className="flex flex-wrap gap-1">
-            {template.perfectFor.slice(0, 2).map((use, i) => (
-              <span key={i} className="px-2 py-0.5 text-2xs bg-forge-surface text-forge-text-secondary rounded">
+            {template.perfectFor.slice(0, 2).map((use) => (
+              <span key={use} className="px-2 py-0.5 text-2xs bg-forge-surface text-forge-text-secondary rounded">
                 {use}
               </span>
             ))}
@@ -1738,8 +1739,8 @@ function TemplateDetail({
         <div className="forge-card p-4">
           <h3 className="text-sm font-medium text-forge-text-secondary mb-3">Perfect for</h3>
           <div className="space-y-2">
-            {template.perfectFor.map((use, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm text-forge-text-secondary">
+            {template.perfectFor.map((use) => (
+              <div key={use} className="flex items-center gap-2 text-sm text-forge-text-secondary">
                 <Check className="w-4 h-4 text-forge-success" />
                 {use}
               </div>
@@ -1820,6 +1821,7 @@ export function Build() {
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showWizard, setShowWizard] = useState(false);
 
   // If URL has template name, find and show it
   const urlTemplate = templateName ? TEMPLATES.find(t => t.id === templateName) : null;
@@ -1858,6 +1860,28 @@ export function Build() {
     navigate(`/build/${template.id}`);
     setSelectedTemplate(template);
   };
+
+  // Show blueprint wizard if active
+  if (showWizard) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <BlueprintWizard
+          onComplete={(result) => {
+            setShowWizard(false);
+            // Navigate to the first suggested template
+            if (result.suggestedTemplates.length > 0) {
+              const match = TEMPLATES.find(t => t.id === result.suggestedTemplates[0]);
+              if (match) {
+                handleSelectTemplate(match);
+                return;
+              }
+            }
+          }}
+          onCancel={() => setShowWizard(false)}
+        />
+      </div>
+    );
+  }
 
   // Show template detail if selected
   if (selectedTemplate || urlTemplate) {
@@ -1944,16 +1968,27 @@ export function Build() {
         </p>
       </div>
 
-      {/* Search (always visible) */}
-      <div className="relative mb-8">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-forge-text-muted" />
-        <input
-          type="text"
-          placeholder="Search templates..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="forge-input w-full pl-11 text-sm"
-        />
+      {/* Search + Help me choose */}
+      <div className="flex items-center gap-3 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-forge-text-muted" />
+          <input
+            type="text"
+            placeholder="Search templates..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="forge-input w-full pl-11 text-sm"
+          />
+        </div>
+        {!selectedCategory && !selectedSubcategory && (
+          <button
+            onClick={() => setShowWizard(true)}
+            className="forge-btn-secondary text-sm whitespace-nowrap"
+          >
+            <Sparkles className="w-4 h-4" />
+            Help me choose
+          </button>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
@@ -2022,8 +2057,13 @@ export function Build() {
             className="space-y-3"
           >
             {filteredTemplates.length === 0 ? (
-              <div className="text-center py-12 text-forge-text-muted text-sm">
-                No templates found matching "{searchQuery}"
+              <div className="flex flex-col items-center justify-center py-16">
+                <div className="w-14 h-14 rounded-full bg-forge-surface border border-forge-border flex items-center justify-center mb-5">
+                  <Search className="w-6 h-6 text-forge-text-muted" />
+                </div>
+                <p className="text-sm text-forge-text-muted">
+                  No templates found matching "{searchQuery}"
+                </p>
               </div>
             ) : (
               filteredTemplates.map((template) => (

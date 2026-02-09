@@ -17,6 +17,7 @@ import {
 import { useProjectStore } from '@/store/projects';
 import { useAllServers } from '@/store';
 import { suggestServersForProject } from '@/lib/generator/templates';
+import { createEmptySchema } from '@/lib/mantic';
 import type { DeltaType } from '@/lib/mantic';
 
 const deltaIcons: Record<DeltaType, React.ElementType> = {
@@ -77,8 +78,8 @@ function DeltaSection({
       
       {expanded && (
         <div className="px-4 pb-3 pl-11 space-y-2">
-          {deltas.map((delta, i) => (
-            <div key={i} className="flex items-start gap-2">
+          {deltas.map((delta) => (
+            <div key={delta.content} className="flex items-start gap-2">
               <div className="flex-1">
                 <p className="text-sm text-forge-text-secondary">{delta.content}</p>
               </div>
@@ -94,9 +95,8 @@ function DeltaSection({
 }
 
 export function Projects() {
-  const { projects, activeProjectName, setActiveProject, getActiveProject } = useProjectStore();
+  const { projects, activeProjectName, setActiveProject, getActiveProject, addProject } = useProjectStore();
   const allServers = useAllServers();
-  
   const activeProject = getActiveProject();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     decision: true,
@@ -133,7 +133,15 @@ export function Projects() {
             MANTIC schema defines what you're building — deltas drive server suggestions
           </p>
         </div>
-        <button className="forge-btn-secondary">
+        <button
+          onClick={() => {
+            const name = `project-${Date.now().toString(36).slice(-4)}`;
+            const schema = createEmptySchema(name);
+            addProject(schema);
+            setActiveProject(name);
+          }}
+          className="forge-btn-secondary"
+        >
           <Plus className="w-4 h-4" />
           New Project
         </button>

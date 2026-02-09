@@ -2,9 +2,9 @@
   "_meta": {
     "version": "1.1.0",
     "description": "Design memory for MCP Forge. Updated by the design bot after each approval/rejection cycle. This file IS the learned taste — treat it as sacred.",
-    "last_updated": "2026-02-08T22:00:00.000Z",
-    "total_sessions": 4,
-    "total_proposals": 4,
+    "last_updated": "2026-02-08T23:00:00.000Z",
+    "total_sessions": 5,
+    "total_proposals": 5,
     "acceptance_rate": 1
   },
   "design_principles": [
@@ -224,6 +224,32 @@
         "confirm() dialogs should be replaced with inline two-click confirmation patterns",
         "BlueprintWizard was the largest violator with 30+ raw color classes — systematic replace_all is the efficient approach",
         "Emoji icons in templates should be replaced with Lucide components for design consistency"
+      ]
+    },
+    {
+      "session_id": "session-cycle-4-5-functional",
+      "date": "2026-02-08T23:00:00.000Z",
+      "objective": "Wire orphaned components, fix dead buttons, improve error handling and keys",
+      "files_scoped": [
+        "src/pages/Build.tsx",
+        "src/pages/Templates.tsx",
+        "src/pages/Projects.tsx",
+        "src/pages/Test.tsx",
+        "src/pages/ServerDetail.tsx",
+        "src/pages/Settings.tsx"
+      ],
+      "proposals_made": 1,
+      "proposals_accepted": 1,
+      "proposals_rejected": 0,
+      "proposals_revised": 0,
+      "iterations": 1,
+      "learnings": [
+        "BlueprintWizard was 1125 lines of orphaned code — wired into Build page via 'Help me choose' button",
+        "Dead buttons are worse than missing buttons — always wire onClick or use Link",
+        "createEmptySchema() helper exists in mantic — use it instead of manually constructing schemas",
+        "Clipboard API needs try-catch with document.execCommand fallback for older browsers",
+        "JSON parse errors in form inputs should surface via setCustomValidity, not be silently ignored",
+        "Use stable keys (content, id, name) instead of array indices for React list rendering"
       ]
     }
   ]
