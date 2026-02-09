@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -10,11 +10,93 @@ import {
   ArrowUpRight,
   Clock,
   AlertTriangle,
+  FileCode,
+  Download,
+  ChevronDown,
+  ChevronRight,
 } from 'lucide-react';
 import { useForgeStore, useAllServers } from '@/store';
-import { generateClaudeConfig } from '@/lib/generator';
+import { generateServer, type GeneratedFiles } from '@/lib/generator';
+import { builtInTemplates } from '@/lib/generator/templates';
+import { toast } from '@/store/toast';
+import type { TemplateDefinition } from '@/types';
 
 type Tab = 'overview' | 'tools' | 'code' | 'history';
+
+// Map file names to display labels
+const FILE_LABELS: Record<string, string> = {
+  'src/index.ts': 'Server Source (TypeScript)',
+  'package.json': 'package.json',
+  'tsconfig.json': 'tsconfig.json',
+  'README.md': 'README',
+  '.env.example': 'Environment Variables',
+  'claude-config.json': 'Claude Config',
+};
+
+function CodeFileSection({
+  fileName,
+  content,
+  defaultExpanded,
+}: {
+  fileName: string;
+  content: string;
+  defaultExpanded?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(defaultExpanded ?? false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = content;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    setCopied(true);
+    toast.success(`Copied ${fileName}`);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="forge-card overflow-hidden">
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-forge-surface-hover transition-colors"
+      >
+        {expanded ? (
+          <ChevronDown className="w-4 h-4 text-forge-text-muted" />
+        ) : (
+          <ChevronRight className="w-4 h-4 text-forge-text-muted" />
+        )}
+        <FileCode className="w-4 h-4 text-forge-accent" />
+        <span className="text-sm font-medium text-forge-text">{FILE_LABELS[fileName] || fileName}</span>
+        <span className="text-2xs text-forge-text-muted font-mono ml-auto mr-2">{fileName}</span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCopy();
+          }}
+          className="p-1 hover:bg-forge-bg rounded transition-colors"
+        >
+          {copied ? (
+            <Check className="w-3.5 h-3.5 text-forge-success" />
+          ) : (
+            <Copy className="w-3.5 h-3.5 text-forge-text-muted" />
+          )}
+        </button>
+      </button>
+      {expanded && (
+        <div className="border-t border-forge-border">
+          <pre className="code-block text-xs overflow-auto max-h-96 p-4">{content}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ServerDetail() {
   const { serverName } = useParams();
@@ -22,12 +104,51 @@ export function ServerDetail() {
   const allServers = useAllServers();
   const promoteServer = useForgeStore((s) => s.promoteServer);
   const deleteServer = useForgeStore((s) => s.deleteServer);
+  const config = useForgeStore((s) => s.config);
 
   const [activeTab, setActiveTab] = useState<Tab>('overview');
-  const [copied, setCopied] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const server = allServers.find((s) => s.name === serverName);
+
+  // Generate all server files on demand
+  const generatedFiles = useMemo<GeneratedFiles | null>(() => {
+    if (!server) return null;
+
+    // Find the matching built-in template, or create a minimal one
+    const templateDef: TemplateDefinition = builtInTemplates.find(
+      (t) => t.name === server.template
+    ) || {
+      name: server.template,
+      display_name: server.template,
+      description: `MCP server generated from ${server.template} template`,
+      version: server.meta.template_version || '1.0.0',
+      author: config.defaults.author,
+      tags: [],
+      variables: Object.keys(server.variables).map((name) => ({
+        name,
+        type: 'string' as const,
+        required: true,
+        description: '',
+      })),
+      tools: server.tools,
+      dependencies: [],
+    };
+
+    try {
+      return generateServer({
+        serverName: server.name,
+        description: templateDef.description,
+        template: templateDef,
+        variables: server.variables,
+        tools: server.tools,
+        transport: config.defaults.transport,
+        port: server.port || 3000,
+      });
+    } catch {
+      return null;
+    }
+  }, [server, config.defaults.transport, config.defaults.author]);
 
   if (!server) {
     return (
@@ -45,26 +166,25 @@ export function ServerDetail() {
     );
   }
 
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback for browsers without clipboard API
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  const handleDownloadAll = () => {
+    if (!generatedFiles) return;
+    // Download as a single concatenated file with clear separators
+    const content = Object.entries(generatedFiles)
+      .map(([name, code]) => `// ===== ${name} =====\n\n${code}`)
+      .join('\n\n');
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${server.name}-generated.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Downloaded generated files');
   };
 
   const handlePromote = () => {
     promoteServer(server.name);
+    toast.success(`${server.name} promoted to production`);
   };
 
   const handleDelete = () => {
@@ -73,6 +193,7 @@ export function ServerDetail() {
       return;
     }
     deleteServer(server.name, server.location);
+    toast.info(`Deleted ${server.name}`);
     navigate('/');
   };
 
@@ -83,12 +204,10 @@ export function ServerDetail() {
     return () => clearTimeout(timer);
   }, [confirmDelete]);
 
-  const claudeConfig = generateClaudeConfig(server);
-
   const tabs = [
     { id: 'overview' as Tab, label: 'Overview' },
-    { id: 'tools' as Tab, label: 'Tools' },
-    { id: 'code' as Tab, label: 'Config' },
+    { id: 'tools' as Tab, label: `Tools (${server.tools.length})` },
+    { id: 'code' as Tab, label: 'Generated Code' },
     { id: 'history' as Tab, label: 'History' },
   ];
 
@@ -220,13 +339,20 @@ export function ServerDetail() {
               )}
             </div>
 
-            <div className="forge-card p-4 col-span-2">
+            <div className="forge-card p-4 md:col-span-2">
               <h3 className="font-medium text-forge-text mb-3">Actions</h3>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <Link to={`/test/${server.name}`} className="forge-btn-secondary">
                   <FlaskConical className="w-4 h-4" />
                   Open Test Harness
                 </Link>
+                <button
+                  onClick={() => setActiveTab('code')}
+                  className="forge-btn-secondary"
+                >
+                  <FileCode className="w-4 h-4" />
+                  View Generated Code
+                </button>
                 <button onClick={handleDelete} className={confirmDelete ? 'forge-btn-danger animate-pulse' : 'forge-btn-danger'}>
                   {confirmDelete ? (
                     <AlertTriangle className="w-4 h-4" />
@@ -242,73 +368,104 @@ export function ServerDetail() {
 
         {activeTab === 'tools' && (
           <div className="space-y-3">
-            {server.tools.map((tool, i) => (
-              <div key={i} className="forge-card p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h4 className="font-mono text-forge-text">{tool.name}</h4>
-                    <p className="text-sm text-forge-text-secondary mt-1">
-                      {tool.description}
-                    </p>
-                  </div>
-                  <div className="flex gap-1">
-                    {tool.annotations?.readOnlyHint && (
-                      <span className="forge-badge-info">read-only</span>
-                    )}
-                    {tool.annotations?.destructiveHint && (
-                      <span className="forge-badge-warning">destructive</span>
-                    )}
-                  </div>
-                </div>
-                {Object.keys(tool.parameters).length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-forge-border">
-                    <h5 className="text-xs text-forge-text-muted mb-2">Parameters</h5>
-                    <div className="space-y-1">
-                      {Object.entries(tool.parameters).map(([key, param]) => (
-                        <div key={key} className="flex items-center gap-2 text-xs">
-                          <code className="text-forge-accent">{key}</code>
-                          <span className="text-forge-text-muted">
-                            ({param.type}{param.required && ', required'})
-                          </span>
-                        </div>
-                      ))}
+            {server.tools.length === 0 ? (
+              <div className="forge-card flex flex-col items-center justify-center py-12">
+                <FlaskConical className="w-5 h-5 text-forge-text-muted mb-2" />
+                <p className="text-sm text-forge-text-muted">No tools defined.</p>
+              </div>
+            ) : (
+              server.tools.map((tool) => (
+                <div key={tool.name} className="forge-card p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h4 className="font-mono text-forge-text">{tool.name}</h4>
+                      <p className="text-sm text-forge-text-secondary mt-1">
+                        {tool.description}
+                      </p>
+                    </div>
+                    <div className="flex gap-1">
+                      {tool.annotations?.readOnlyHint && (
+                        <span className="forge-badge-info">read-only</span>
+                      )}
+                      {tool.annotations?.destructiveHint && (
+                        <span className="forge-badge-warning">destructive</span>
+                      )}
                     </div>
                   </div>
-                )}
-              </div>
-            ))}
+                  {Object.keys(tool.parameters).length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-forge-border">
+                      <h5 className="text-xs text-forge-text-muted mb-2">Parameters</h5>
+                      <div className="space-y-1">
+                        {Object.entries(tool.parameters).map(([key, param]) => (
+                          <div key={key} className="flex items-center gap-2 text-xs">
+                            <code className="text-forge-accent">{key}</code>
+                            <span className="text-forge-text-muted">
+                              ({param.type}{param.required && ', required'})
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         )}
 
         {activeTab === 'code' && (
-          <div className="space-y-4">
-            <div className="forge-card p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium text-forge-text">Claude Code Configuration</h3>
-                <button
-                  onClick={() => handleCopy(claudeConfig)}
-                  className="forge-btn-ghost text-sm"
-                >
-                  {copied ? (
-                    <Check className="w-4 h-4 text-forge-success" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                  Copy
-                </button>
+          <div className="space-y-3">
+            {/* Header with download */}
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <h3 className="font-medium text-forge-text">Generated Server Files</h3>
+                <p className="text-sm text-forge-text-muted mt-1">
+                  Copy individual files or download all at once
+                </p>
               </div>
-              <p className="text-sm text-forge-text-muted mb-3">
-                Add to <code className="text-forge-accent">~/.claude/claude_desktop_config.json</code>
-              </p>
-              <pre className="code-block text-xs overflow-auto">{claudeConfig}</pre>
+              <button onClick={handleDownloadAll} className="forge-btn-secondary text-sm">
+                <Download className="w-4 h-4" />
+                Download All
+              </button>
             </div>
 
-            <div className="forge-card p-4">
-              <h3 className="font-medium text-forge-text mb-3">Forge Metadata</h3>
-              <pre className="code-block text-xs overflow-auto">
-                {JSON.stringify(server.meta, null, 2)}
-              </pre>
-            </div>
+            {generatedFiles ? (
+              <>
+                {/* Main source file expanded by default */}
+                <CodeFileSection
+                  fileName="src/index.ts"
+                  content={generatedFiles['src/index.ts']}
+                  defaultExpanded
+                />
+                <CodeFileSection
+                  fileName="package.json"
+                  content={generatedFiles['package.json']}
+                />
+                <CodeFileSection
+                  fileName="tsconfig.json"
+                  content={generatedFiles['tsconfig.json']}
+                />
+                <CodeFileSection
+                  fileName="claude-config.json"
+                  content={generatedFiles['claude-config.json']}
+                />
+                <CodeFileSection
+                  fileName=".env.example"
+                  content={generatedFiles['.env.example']}
+                />
+                <CodeFileSection
+                  fileName="README.md"
+                  content={generatedFiles['README.md']}
+                />
+              </>
+            ) : (
+              <div className="forge-card flex flex-col items-center justify-center py-12">
+                <FileCode className="w-5 h-5 text-forge-text-muted mb-2" />
+                <p className="text-sm text-forge-text-muted">
+                  Unable to generate code for this server configuration.
+                </p>
+              </div>
+            )}
           </div>
         )}
 

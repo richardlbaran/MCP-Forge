@@ -492,7 +492,15 @@ function FleetContent() {
     (connectionError || disconnectedForMs > 10000);
   const isReconnecting = !connected && disconnectedForMs > 0 && disconnectedForMs <= 10000;
 
-  // Show skeleton during initial load
+  // Auto-dismiss initial load after 3 seconds even without connection
+  useEffect(() => {
+    if (isInitialLoad) {
+      const timeout = setTimeout(() => setIsInitialLoad(false), 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isInitialLoad]);
+
+  // Show skeleton during initial load (max 3 seconds)
   if (isInitialLoad && !connected) {
     return <FleetSkeleton fullPage workerCount={3} />;
   }
@@ -669,9 +677,8 @@ function FleetContent() {
 export function Fleet() {
   return (
     <FleetErrorBoundary
-      onError={(error, errorInfo) => {
-        // Could integrate with error tracking service here
-        console.error('[Fleet] Error caught by boundary:', error, errorInfo);
+      onError={() => {
+        // Error tracking integration point
       }}
     >
       <FleetContent />

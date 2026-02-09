@@ -189,9 +189,6 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
     }
 
     const delay = getBackoffDelay();
-    console.log(
-      `[useFleetSocket] Scheduling reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttemptsRef.current})`
-    );
 
     reconnectTimeoutRef.current = setTimeout(() => {
       reconnectAttemptsRef.current += 1;
@@ -218,13 +215,11 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
     setError(null);
 
     const currentUrl = urlRef.current;
-    console.log(`[useFleetSocket] Connecting to ${currentUrl}...`);
 
     try {
       const ws = new WebSocket(currentUrl);
 
       ws.onopen = () => {
-        console.log('[useFleetSocket] Connected');
         isConnectingRef.current = false;
         reconnectAttemptsRef.current = 0;
         setConnected(true);
@@ -232,7 +227,6 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
       };
 
       ws.onclose = (event) => {
-        console.log(`[useFleetSocket] Disconnected (code: ${event.code})`);
         isConnectingRef.current = false;
         setConnected(false);
         wsRef.current = null;
@@ -243,8 +237,7 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
         }
       };
 
-      ws.onerror = (event) => {
-        console.error('[useFleetSocket] WebSocket error:', event);
+      ws.onerror = () => {
         isConnectingRef.current = false;
         setError('WebSocket connection error');
       };
@@ -253,14 +246,13 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
         try {
           const data = JSON.parse(event.data) as FleetEvent;
           handleEventRef.current(data);
-        } catch (err) {
-          console.error('[useFleetSocket] Failed to parse message:', err);
+        } catch {
+          // Ignore malformed messages
         }
       };
 
       wsRef.current = ws;
     } catch (err) {
-      console.error('[useFleetSocket] Failed to create WebSocket:', err);
       isConnectingRef.current = false;
       setError(err instanceof Error ? err.message : 'Failed to connect');
       scheduleReconnect();
@@ -277,7 +269,6 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
     reconnectAttemptsRef.current = 0;
 
     if (wsRef.current) {
-      console.log('[useFleetSocket] Disconnecting...');
       wsRef.current.close(1000, 'User requested disconnect');
       wsRef.current = null;
     }
@@ -288,14 +279,13 @@ export function useFleetSocket(options: UseFleetSocketOptions = {}): FleetSocket
   // Send a command (stable)
   const send = useCallback((command: FleetCommand) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-      console.warn('[useFleetSocket] Cannot send: not connected');
       return;
     }
 
     try {
       wsRef.current.send(JSON.stringify(command));
-    } catch (err) {
-      console.error('[useFleetSocket] Failed to send command:', err);
+    } catch {
+      // Send failed, connection likely lost
     }
   }, []);
 

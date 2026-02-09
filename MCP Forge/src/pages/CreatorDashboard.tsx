@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from '@/store/toast';
 import { motion } from 'framer-motion';
 import {
   Play,
@@ -190,11 +191,11 @@ export function CreatorDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="forge-btn-secondary">
+          <button onClick={() => toast.info('Analytics dashboard coming soon')} className="forge-btn-secondary">
             <BarChart3 className="w-4 h-4" />
             Full Analytics
           </button>
-          <button className="forge-btn-primary">
+          <button onClick={() => toast.info('Upload functionality coming soon')} className="forge-btn-primary">
             <Upload className="w-4 h-4" />
             Upload Video
           </button>
@@ -202,7 +203,7 @@ export function CreatorDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -297,13 +298,13 @@ export function CreatorDashboard() {
         <h3 className="text-sm font-medium text-forge-text-secondary uppercase tracking-wider mb-3">
           Quick Actions
         </h3>
-        <div className="grid grid-cols-6 gap-3">
-          <QuickAction icon={Play} label="Process Video" />
-          <QuickAction icon={Scissors} label="Create Clips" />
-          <QuickAction icon={BarChart3} label="Weekly Report" />
-          <QuickAction icon={Calendar} label="Schedule" />
-          <QuickAction icon={Flame} label="Trending" />
-          <QuickAction icon={MessageSquare} label="Comments" />
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          <QuickAction icon={Play} label="Process Video" onClick={() => toast.info('Process Video coming soon')} />
+          <QuickAction icon={Scissors} label="Create Clips" onClick={() => toast.info('Create Clips coming soon')} />
+          <QuickAction icon={BarChart3} label="Weekly Report" onClick={() => toast.info('Weekly Report coming soon')} />
+          <QuickAction icon={Calendar} label="Schedule" onClick={() => toast.info('Schedule coming soon')} />
+          <QuickAction icon={Flame} label="Trending" onClick={() => toast.info('Trending coming soon')} />
+          <QuickAction icon={MessageSquare} label="Comments" onClick={() => toast.info('Comments coming soon')} />
         </div>
       </motion.div>
 
@@ -331,7 +332,7 @@ export function CreatorDashboard() {
       </motion.div>
 
       {/* Platform Performance & Trending */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Platform Performance */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -371,7 +372,7 @@ export function CreatorDashboard() {
             </div>
             <div className="space-y-1">
               {trending.map((item, i) => (
-                <TrendingItem key={i} rank={i + 1} text={item} />
+                <TrendingItem key={item} rank={i + 1} text={item} />
               ))}
             </div>
           </div>
@@ -383,8 +384,8 @@ export function CreatorDashboard() {
               <h3 className="font-medium text-forge-text text-sm">AI Suggestions</h3>
             </div>
             <div className="space-y-2">
-              {suggestions.map((suggestion, i) => (
-                <p key={i} className="text-sm text-forge-text-secondary">{suggestion}</p>
+              {suggestions.map((suggestion) => (
+                <p key={suggestion} className="text-sm text-forge-text-secondary">{suggestion}</p>
               ))}
             </div>
           </div>

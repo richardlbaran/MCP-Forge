@@ -141,7 +141,7 @@ export function Dashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard
           label="Workspace"
           value={workspaceServers.length}
@@ -169,12 +169,12 @@ export function Dashboard() {
       </div>
 
       {/* Main content grid */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Servers */}
         <div className="col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-medium text-forge-text">Recent Servers</h2>
-            <Link to="/build" className="text-sm text-forge-accent hover:underline">
+            <Link to="/templates" className="text-sm text-forge-accent hover:underline">
               View all
             </Link>
           </div>
@@ -207,7 +207,7 @@ export function Dashboard() {
           )}
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-4 gap-3 pt-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
             <Link
               to="/build/supabase"
               className="forge-card-hover p-4 text-center group"

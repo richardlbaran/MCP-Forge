@@ -51,6 +51,8 @@ export function Test() {
       setSelectedServer(urlServerName);
       connect(urlServerName);
     }
+    // Only run when URL param changes, not on every connection state change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlServerName]);
 
   const handleConnect = async () => {
@@ -357,9 +359,9 @@ export function Test() {
                 </p>
               ) : (
                 <div className="space-y-1">
-                  {logs.map((log, i) => (
+                  {logs.map((log) => (
                     <div
-                      key={i}
+                      key={`${log.timestamp}-${log.method || log.type}`}
                       className={`text-2xs font-mono ${
                         log.type === 'error'
                           ? 'text-forge-error'

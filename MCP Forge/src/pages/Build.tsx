@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForgeStore } from '@/store';
 import { BlueprintWizard } from '@/components/BlueprintWizard';
+import { toast } from '@/store/toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -1766,8 +1767,8 @@ function TemplateDetail({
       <div className="forge-card p-4">
         <h3 className="text-sm font-medium text-forge-text-secondary mb-3">Tools ({template.tools.length})</h3>
         <div className="space-y-3">
-          {template.tools.map((tool, i) => (
-            <div key={i} className="p-3 rounded-lg bg-forge-bg">
+          {template.tools.map((tool) => (
+            <div key={tool.name} className="p-3 rounded-lg bg-forge-bg">
               <div className="flex items-center gap-2 mb-1">
                 <code className="text-sm text-forge-accent">{tool.name}</code>
               </div>
@@ -1782,8 +1783,8 @@ function TemplateDetail({
         <div className="forge-card p-4">
           <h3 className="text-sm font-medium text-forge-text-secondary mb-3">Configuration</h3>
           <div className="space-y-2">
-            {template.variables.map((v, i) => (
-              <div key={i} className="flex items-center justify-between p-2 rounded bg-forge-bg">
+            {template.variables.map((v) => (
+              <div key={v.name} className="flex items-center justify-between p-2 rounded bg-forge-bg">
                 <div>
                   <code className="text-sm text-forge-info">{v.name}</code>
                   {v.required && <span className="text-forge-error text-xs ml-1">*</span>}
@@ -1933,6 +1934,7 @@ export function Build() {
                 template.variables.map((v) => [v.name, v.default ?? ''])
               ),
             });
+            toast.success(`Created ${serverName} — view generated code on the next page`);
             navigate(`/server/${serverName}`);
           }}
         />

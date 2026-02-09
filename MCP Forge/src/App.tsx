@@ -1,15 +1,29 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Layout } from '@/components/ui/Layout';
+import { Toaster } from '@/components/ui/Toaster';
 import { Projects } from '@/pages/Projects';
 import { Dashboard } from '@/pages/Dashboard';
-import { Build } from '@/pages/Build';
-import { Test } from '@/pages/Test';
-import { Templates } from '@/pages/Templates';
 import { Settings } from '@/pages/Settings';
 import { ServerDetail } from '@/pages/ServerDetail';
-import { Fleet } from '@/pages/Fleet';
-import { CreatorDashboard } from '@/pages/CreatorDashboard';
+
+// Lazy-load content-heavy pages
+const Build = lazy(() => import('@/pages/Build').then(m => ({ default: m.Build })));
+const Test = lazy(() => import('@/pages/Test').then(m => ({ default: m.Test })));
+const Templates = lazy(() => import('@/pages/Templates').then(m => ({ default: m.Templates })));
 import { AlertTriangle } from 'lucide-react';
+
+// Lazy-load heavy pages
+const Fleet = lazy(() => import('@/pages/Fleet').then(m => ({ default: m.Fleet })));
+const CreatorDashboard = lazy(() => import('@/pages/CreatorDashboard').then(m => ({ default: m.CreatorDashboard })));
+
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center py-32">
+      <div className="w-6 h-6 border-2 border-forge-accent border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 function NotFound() {
   return (
@@ -31,22 +45,25 @@ export function App() {
   return (
     <BrowserRouter>
       <Layout>
-        <Routes>
-          <Route path="/" element={<Projects />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/fleet" element={<Fleet />} />
-          <Route path="/creator" element={<CreatorDashboard />} />
-          <Route path="/build" element={<Build />} />
-          <Route path="/build/:templateName" element={<Build />} />
-          <Route path="/test" element={<Test />} />
-          <Route path="/test/:serverName" element={<Test />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/server/:serverName" element={<ServerDetail />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Projects />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/fleet" element={<Fleet />} />
+            <Route path="/creator" element={<CreatorDashboard />} />
+            <Route path="/build" element={<Build />} />
+            <Route path="/build/:templateName" element={<Build />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/test/:serverName" element={<Test />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/server/:serverName" element={<ServerDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Layout>
+      <Toaster />
     </BrowserRouter>
   );
 }
