@@ -215,13 +215,13 @@ export function ServerDetail() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <button
-          onClick={() => navigate(-1)}
+        <Link
+          to="/"
           className="flex items-center gap-2 text-forge-text-secondary hover:text-forge-text mb-4 transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
+          My Servers
+        </Link>
 
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">

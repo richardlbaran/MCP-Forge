@@ -69,7 +69,10 @@ export function Settings() {
 
       {/* Paths */}
       <div className="forge-card p-4">
-        <h2 className="font-medium text-forge-text mb-4">Paths</h2>
+        <h2 className="font-medium text-forge-text mb-1">Paths</h2>
+        <p className="text-xs text-forge-text-muted mb-4">
+          Used in generated code. Currently all data is stored in your browser.
+        </p>
         <div className="space-y-3">
           {Object.entries(config.paths).map(([key, value]) => (
             <div key={key}>
@@ -154,8 +157,11 @@ export function Settings() {
       </div>
 
       {/* Context Bridge */}
-      <div className="forge-card p-4">
-        <h2 className="font-medium text-forge-text mb-4">ContextCommand Bridge</h2>
+      <div className="forge-card p-4 opacity-60">
+        <div className="flex items-center gap-2 mb-4">
+          <h2 className="font-medium text-forge-text">ContextCommand Bridge</h2>
+          <span className="forge-badge-default text-2xs">Coming Soon</span>
+        </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm text-forge-text">Enable Bridge</label>
@@ -210,8 +216,11 @@ export function Settings() {
       </div>
 
       {/* MCP Server */}
-      <div className="forge-card p-4">
-        <h2 className="font-medium text-forge-text mb-4">Forge MCP Server</h2>
+      <div className="forge-card p-4 opacity-60">
+        <div className="flex items-center gap-2 mb-4">
+          <h2 className="font-medium text-forge-text">Forge MCP Server</h2>
+          <span className="forge-badge-default text-2xs">Coming Soon</span>
+        </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm text-forge-text">Enable Server</label>

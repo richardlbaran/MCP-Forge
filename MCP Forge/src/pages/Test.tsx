@@ -11,6 +11,7 @@ import {
   Plug,
   Wrench,
   Terminal,
+  Info,
 } from 'lucide-react';
 import { useAllServers } from '@/store';
 import { useTestingStore, useSelectedToolSchema } from '@/store/testing';
@@ -70,7 +71,7 @@ export function Test() {
   };
 
   return (
-    <div className="h-[calc(100vh-theme(spacing.12))] flex flex-col">
+    <div className="flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-semibold text-forge-text">Test Harness</h1>
@@ -80,7 +81,18 @@ export function Test() {
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-4 gap-4 min-h-0">
+      {/* Simulation disclaimer */}
+      <div className="flex items-start gap-3 p-3 mb-4 rounded-lg bg-forge-info/5 border border-forge-info/20">
+        <Info className="w-4 h-4 text-forge-info shrink-0 mt-0.5" />
+        <p className="text-xs text-forge-text-secondary">
+          <span className="font-medium text-forge-text">Simulated mode.</span>{' '}
+          This test harness uses mock responses to preview tool behavior. To run
+          your server for real, copy the generated code and run it locally with{' '}
+          <code className="text-forge-accent">npx ts-node src/index.ts</code>.
+        </p>
+      </div>
+
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
         {/* Left panel - Server & Tools */}
         <div className="col-span-1 flex flex-col gap-4">
           {/* Server selector */}

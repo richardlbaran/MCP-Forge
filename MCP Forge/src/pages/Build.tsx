@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForgeStore } from '@/store';
 import { BlueprintWizard } from '@/components/BlueprintWizard';
 import { toast } from '@/store/toast';
+import { builtInTemplates } from '@/lib/generator/templates';
+import type { TemplateDefinition } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -32,6 +34,7 @@ import {
   Clock,
   Check,
   ChevronRight,
+  Layers,
 } from 'lucide-react';
 
 // ===========================================
@@ -85,6 +88,47 @@ interface Category {
     description: string;
     icon: typeof Video;
   }[];
+}
+
+// ===========================================
+// Convert backend TemplateDefinition → UI Template
+// ===========================================
+
+function convertBuiltInTemplate(bt: TemplateDefinition): Template {
+  return {
+    id: bt.name,
+    name: bt.display_name,
+    description: bt.description,
+    icon: Layers,
+    color: 'text-forge-info',
+    category: 'data',
+    subcategory: 'database',
+    layer: 3,
+    perfectFor: bt.tags.slice(0, 3),
+    worksWith: [],
+    tools: bt.tools.map((t) => ({
+      name: t.name,
+      description: t.description,
+      parameters: Object.fromEntries(
+        Object.entries(t.parameters).map(([k, v]) => [
+          k,
+          {
+            type: v.type,
+            description: v.description || '',
+            required: v.required,
+            default: v.default as string | number | boolean | undefined,
+          },
+        ])
+      ),
+    })),
+    variables: bt.variables.map((v) => ({
+      name: v.name,
+      description: v.description,
+      required: v.required,
+      default: v.default as string | undefined,
+    })),
+    instructions: '',
+  };
 }
 
 // ===========================================
@@ -1824,8 +1868,14 @@ export function Build() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showWizard, setShowWizard] = useState(false);
 
-  // If URL has template name, find and show it
-  const urlTemplate = templateName ? TEMPLATES.find(t => t.id === templateName) : null;
+  // If URL has template name, find in UI templates first, then fall back to backend templates
+  const urlTemplate = templateName
+    ? TEMPLATES.find((t) => t.id === templateName) ||
+      (() => {
+        const bt = builtInTemplates.find((t) => t.name === templateName);
+        return bt ? convertBuiltInTemplate(bt) : null;
+      })()
+    : null;
   
   const currentCategory = CATEGORIES.find(c => c.id === selectedCategory);
   

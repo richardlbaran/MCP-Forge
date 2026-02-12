@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard,
   Hammer,
   FlaskConical,
   Layers,
@@ -10,27 +9,20 @@ import {
   Zap,
   Server,
   FolderOpen,
-  Target,
-  Gauge,
-  Video,
   Menu,
   X,
 } from 'lucide-react';
 import { useForgeStore } from '@/store';
-import { useProjectStore } from '@/store/projects';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const navItems = [
-  { path: '/', icon: Target, label: 'Projects' },
-  { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/fleet', icon: Gauge, label: 'Fleet' },
-  { path: '/creator', icon: Video, label: 'Creator' },
+  { path: '/', icon: Server, label: 'My Servers' },
   { path: '/build', icon: Hammer, label: 'Build' },
-  { path: '/test', icon: FlaskConical, label: 'Test' },
   { path: '/templates', icon: Layers, label: 'Templates' },
+  { path: '/test', icon: FlaskConical, label: 'Test' },
   { path: '/settings', icon: Settings, label: 'Settings' },
 ];
 
@@ -39,8 +31,6 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const config = useForgeStore((s) => s.config);
   const workspaceCount = useForgeStore((s) => s.workspaceServers.length);
   const deployedCount = useForgeStore((s) => s.deployedServers.length);
-  const activeProjectName = useProjectStore((s) => s.activeProjectName);
-
   return (
     <>
       {/* Logo */}
@@ -105,22 +95,6 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           </div>
         </div>
 
-        {/* Active project */}
-        {activeProjectName && (
-          <div className="mt-4 pt-4 border-t border-forge-border">
-            <p className="px-3 text-2xs text-forge-text-muted uppercase tracking-wider mb-2">
-              Active Project
-            </p>
-            <Link
-              to="/"
-              onClick={onNavigate}
-              className="flex items-center gap-3 px-3 py-2 text-sm text-forge-accent hover:bg-forge-accent-glow rounded-md transition-colors"
-            >
-              <Target className="w-4 h-4" />
-              <span className="truncate">{activeProjectName}</span>
-            </Link>
-          </div>
-        )}
       </nav>
 
       {/* Footer */}

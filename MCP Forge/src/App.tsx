@@ -1,21 +1,16 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/ui/Layout';
 import { Toaster } from '@/components/ui/Toaster';
 import { Projects } from '@/pages/Projects';
-import { Dashboard } from '@/pages/Dashboard';
 import { Settings } from '@/pages/Settings';
 import { ServerDetail } from '@/pages/ServerDetail';
+import { AlertTriangle } from 'lucide-react';
 
 // Lazy-load content-heavy pages
 const Build = lazy(() => import('@/pages/Build').then(m => ({ default: m.Build })));
 const Test = lazy(() => import('@/pages/Test').then(m => ({ default: m.Test })));
 const Templates = lazy(() => import('@/pages/Templates').then(m => ({ default: m.Templates })));
-import { AlertTriangle } from 'lucide-react';
-
-// Lazy-load heavy pages
-const Fleet = lazy(() => import('@/pages/Fleet').then(m => ({ default: m.Fleet })));
-const CreatorDashboard = lazy(() => import('@/pages/CreatorDashboard').then(m => ({ default: m.CreatorDashboard })));
 
 function PageLoader() {
   return (
@@ -48,10 +43,10 @@ export function App() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Projects />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/fleet" element={<Fleet />} />
-            <Route path="/creator" element={<CreatorDashboard />} />
+            <Route path="/projects" element={<Navigate to="/" replace />} />
+            <Route path="/dashboard" element={<Navigate to="/" replace />} />
+            <Route path="/fleet" element={<Navigate to="/" replace />} />
+            <Route path="/creator" element={<Navigate to="/" replace />} />
             <Route path="/build" element={<Build />} />
             <Route path="/build/:templateName" element={<Build />} />
             <Route path="/test" element={<Test />} />

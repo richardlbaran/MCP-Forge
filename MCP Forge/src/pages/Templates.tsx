@@ -51,9 +51,9 @@ export function Templates() {
             Pre-configured MCP server templates ready to scaffold
           </p>
         </div>
-        <Link to="/build/_blank" className="forge-btn-secondary">
+        <Link to="/build" className="forge-btn-secondary">
           <Plus className="w-4 h-4" />
-          Create Template
+          Build Custom Server
         </Link>
       </div>
 
